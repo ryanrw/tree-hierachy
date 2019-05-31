@@ -1,16 +1,9 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import rand from './randElemKey'
+import { useInput } from './utils'
+import { Position, DataAndPosition } from './utils/useInput.model'
 // import { GlobalArray } from './globalArray'
-
-interface Position {
-  x: number
-  y: number
-}
-
-interface DataAndPosition extends Position {
-  value: number
-}
 
 const Main = styled.div`
   font-family: Arial, Helvetica, sans-serif;
@@ -36,52 +29,7 @@ const InnerItem = styled.div<Position>`
 `
 
 const App: React.FC = () => {
-  const [allData, setData] = React.useState<DataAndPosition[]>([])
-  const [inputData, setInputData] = React.useState('')
-
-  React.useEffect(() => {
-    console.log(allData)
-  }, [allData])
-
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    try {
-      const value = event.target.value
-      setInputData(value)
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  function handleSubmit() {
-    const value: number = !isNaN(Number(inputData)) ? Number(inputData) : 0
-    if (allData.length < 1) {
-      const data: DataAndPosition = {
-        value,
-        x: 0,
-        y: 0
-      }
-      setData([data])
-    } else {
-      const lastItem = allData[allData.length - 1]
-      // TODO: refactor if have time
-      if (value < lastItem.value) {
-        const data: DataAndPosition = {
-          value,
-          x: lastItem.x - 1,
-          y: allData.length
-        }
-        setData([...allData, data])
-      } else {
-        const data: DataAndPosition = {
-          value,
-          x: lastItem.x + 1,
-          y: allData.length
-        }
-        setData([...allData, data])
-      }
-    }
-    setInputData('')
-  }
+  const { allData, inputData, handleChange, handleSubmit } = useInput()
 
   return (
     <Main>
